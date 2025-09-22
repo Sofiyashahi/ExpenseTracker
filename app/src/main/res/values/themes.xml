@@ -1,0 +1,18 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ExpenseTracker" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Customize your light theme here. -->
+         <item name="colorPrimary">@color/charcoal</item>
+        <item name="popupMenuStyle">@style/WhitePopupMenu</item>
+<!--         <item name="colorPrimaryDark">@color/charcoal</item>-->
+<!--         <item name="colorSecondary">@color/charcoal</item>-->
+<!--        <item name="colorAccent">@color/charcoal</item>-->
+    </style>
+
+    <style name="WhitePopupMenu" parent="Widget.MaterialComponents.PopupMenu">
+        <item name="android:popupBackground">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Theme.ExpenseTracker" parent="Base.Theme.ExpenseTracker" />
+</resources>
