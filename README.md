@@ -39,12 +39,7 @@ It helps you record, update, and filter your daily transactions with a clean UI,
 ## 📸 Screenshots
 | Home Screen | Add/Edit Transaction | Wallet | Category Pie Chart | Profile Screen |
 |-------------|----------------------|-----------------|--------------------|-----------------|
-| ![Expense App sc1](https://github.com/user-attachments/assets/1197568a-ee57-448c-b3b8-60009464f5db)
- | ![Expense App sc2](https://github.com/user-attachments/assets/f8f25f12-af9d-40bd-875e-b14acedd1f94)
- | ![Expense app sc3](https://github.com/user-attachments/assets/8d72057d-41f1-4939-ae20-e1b45ea767c1)
- | ![Expense App sc4](https://github.com/user-attachments/assets/7f06541d-123e-4ddf-9264-f930988731fd)
- | ![Expense App sc5](https://github.com/user-attachments/assets/badd469c-83a4-4d17-86d6-c9a3d0238749)
- |
+| ![Expense App sc1](https://github.com/user-attachments/assets/1197568a-ee57-448c-b3b8-60009464f5db) | ![Expense App sc2](https://github.com/user-attachments/assets/f8f25f12-af9d-40bd-875e-b14acedd1f94) | ![Expense app sc3](https://github.com/user-attachments/assets/8d72057d-41f1-4939-ae20-e1b45ea767c1) | ![Expense App sc4](https://github.com/user-attachments/assets/7f06541d-123e-4ddf-9264-f930988731fd) | ![Expense App sc5](https://github.com/user-attachments/assets/badd469c-83a4-4d17-86d6-c9a3d0238749)|
 
 
 ---
