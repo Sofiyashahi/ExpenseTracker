@@ -27,6 +27,7 @@ import com.sofiyashahi.expensetracker.interfaces.OnTransactionClickListener
 import com.sofiyashahi.expensetracker.model.Expense
 import com.sofiyashahi.expensetracker.model.Income
 import com.sofiyashahi.expensetracker.model.UiState
+import com.sofiyashahi.expensetracker.utils.DeleteTransactionDialog
 import com.sofiyashahi.expensetracker.utils.ManageTransaction
 import com.sofiyashahi.expensetracker.utils.MonthYearPickerDialog
 import com.sofiyashahi.expensetracker.viewmodel.ExpenseViewModel
@@ -202,7 +203,12 @@ class WalletFragment(private val context: Context, private val expenseViewModel:
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                adapter.deleteItem(viewHolder.adapterPosition)
+                val position = viewHolder.bindingAdapterPosition
+                val item = adapter.currentList[position]
+
+                DeleteTransactionDialog.showDeleteConfirmationDialog(
+                    item, position, requireContext(), adapter, expenseViewModel, incomeViewModel
+                )
             }
 
             override fun onChildDraw(

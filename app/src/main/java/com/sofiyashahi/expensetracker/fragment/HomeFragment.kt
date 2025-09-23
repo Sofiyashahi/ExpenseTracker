@@ -1,11 +1,13 @@
 package com.sofiyashahi.expensetracker.fragment
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Canvas
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.SurfaceControl.Transaction
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -29,7 +31,9 @@ import com.sofiyashahi.expensetracker.interfaces.OnTransactionClickListener
 import com.sofiyashahi.expensetracker.interfaces.OnOpenWalletFragment
 import com.sofiyashahi.expensetracker.model.Expense
 import com.sofiyashahi.expensetracker.model.Income
+import com.sofiyashahi.expensetracker.model.TransactionItem
 import com.sofiyashahi.expensetracker.model.UiState
+import com.sofiyashahi.expensetracker.utils.DeleteTransactionDialog
 import com.sofiyashahi.expensetracker.utils.ManageTransaction
 import com.sofiyashahi.expensetracker.viewmodel.ExpenseViewModel
 import com.sofiyashahi.expensetracker.viewmodel.IncomeViewModel
@@ -176,7 +180,12 @@ class HomeFragment(private val context: Context, private val expenseViewModel: E
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                adapter?.deleteItem(viewHolder.adapterPosition)
+                val position = viewHolder.bindingAdapterPosition
+                val item = adapter.currentList[position]
+
+                DeleteTransactionDialog.showDeleteConfirmationDialog(
+                    item, position, requireContext(), adapter, expenseViewModel, incomeViewModel
+                )
 
             }
 
@@ -226,7 +235,6 @@ class HomeFragment(private val context: Context, private val expenseViewModel: E
 
     }
 
-
     private fun viewAll(){
         binding.tvViewAll.setOnClickListener {
             openWalletListener.onOpen()
@@ -242,6 +250,7 @@ class HomeFragment(private val context: Context, private val expenseViewModel: E
     }
 
     override fun onExpenseEditClick(expense: Expense) {
+        MyApplication.editExpense = true
         val bundle = Bundle()
         bundle.putParcelable("expense", expense)
         expenseFragment?.arguments = bundle
@@ -249,6 +258,7 @@ class HomeFragment(private val context: Context, private val expenseViewModel: E
     }
 
     override fun onIncomeEditClick(income: Income) {
+        MyApplication.editExpense = false
         val bundle = Bundle()
         bundle.putParcelable("income", income)
         expenseFragment?.arguments = bundle

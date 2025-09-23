@@ -60,12 +60,14 @@ class ExpenseFragment(private val viewModel: ExpenseViewModel, private val incom
         setSpinnerAdapter()
 
         arguments?.let { bundle ->
-            bundle.getParcelable<Expense>("expense")?.let { expense ->
-                editExpense(expense)
-                return@let
-            }
-            bundle.getParcelable<Income>("income")?.let { income ->
-                editIncome(income)
+            if(MyApplication.editExpense) {
+                bundle.getParcelable<Expense>("expense")?.let { expense ->
+                    editExpense(expense)
+                }
+            } else {
+                bundle.getParcelable<Income>("income")?.let { income ->
+                    editIncome(income)
+                }
             }
         }
 
@@ -205,9 +207,13 @@ class ExpenseFragment(private val viewModel: ExpenseViewModel, private val incom
         binding.etTitle.setText(titleText)
         binding.etAmount.setText(amountValue.toString())
         binding.etDate.setText(timestamp.toFormattedDate())
-//        if(isExpense && expense != null) {
-//            binding.categorySpinner.setSelection(expense.pic)
-//        }
+        if(isExpense && expense != null) {
+            val pic = expense.pic
+            val position = customSpinnerList?.indexOfFirst { it.icon == pic }
+            if (position != null) {
+                binding.categorySpinner.setSelection(position)
+            }
+        }
 
         binding.btAdd.text = "Update"
 

@@ -1,13 +1,11 @@
 package com.sofiyashahi.expensetracker.adapter
 
-import android.content.Context
-import android.icu.text.DecimalFormat
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sofiyashahi.expensetracker.MyApplication
@@ -16,61 +14,28 @@ import com.sofiyashahi.expensetracker.SharedPreferenceManager
 import com.sofiyashahi.expensetracker.databinding.ExpenseItemBinding
 import com.sofiyashahi.expensetracker.fragment.toFormattedDate
 import com.sofiyashahi.expensetracker.interfaces.OnTransactionClickListener
-import com.sofiyashahi.expensetracker.model.Expense
-import com.sofiyashahi.expensetracker.model.Income
 import com.sofiyashahi.expensetracker.model.TransactionItem
-import java.util.Calendar
 
 class ExpenseListAdapter(private val transactionClickListener: OnTransactionClickListener) :
-    RecyclerView.Adapter<ExpenseListAdapter.ViewHolder>() {
+    ListAdapter<TransactionItem, ExpenseListAdapter.ViewHolder>(TransactionDiffCallback()) {
 
-    class ViewHolder(val binding: ExpenseItemBinding) : RecyclerView.ViewHolder(binding.root)
-
-    lateinit var context: Context
-    var formatter: DecimalFormat? = null
-
-    private val displayedTransactions = mutableListOf<TransactionItem>()
-
-    fun submitList(transactions: MutableList<TransactionItem>) {
-        displayedTransactions.clear()
-        displayedTransactions.addAll(transactions)
-        notifyDataSetChanged()
-    }
-
-    fun deleteItem(position: Int) {
-        if (position < displayedTransactions.size) {
-            val item = displayedTransactions[position]  // Get the item at position
-
-            when (item) {
-                is TransactionItem.ExpenseItem -> {
-                    transactionClickListener.onExpenseDeleteClick(item.expense)  // Notify click listener
-                }
-
-                is TransactionItem.IncomeItem -> {
-                    transactionClickListener.onIncomeDeleteClick(item.income)  // Notify click listener
-                }
-            }
-
-            displayedTransactions.removeAt(position)  // Remove from local list
-            notifyItemRemoved(position)  // Notify RecyclerView
-        }
-    }
+    inner class ViewHolder(val binding: ExpenseItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        context = parent.context
-        formatter = DecimalFormat("###,###,###.##")
         val binding = ExpenseItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val item = displayedTransactions[position]
+        val item = getItem(position)
+        val context = holder.itemView.context
         val currency = SharedPreferenceManager.getString("currency")
-        //for context menu edit
+
+        //Popup menu edit
         holder.binding.root.setOnLongClickListener { view ->
             val popup = PopupMenu(context, view)
             popup.menuInflater.inflate(R.menu.expense_edit_menu, popup.menu)
@@ -86,10 +51,7 @@ class ExpenseListAdapter(private val transactionClickListener: OnTransactionClic
                         true
                     }
 
-                    else -> {
-                        Log.d("ExpenseList", "onBindViewHolder: Item not valid")
-                        false
-                    }
+                    else -> false
                 }
             }
 
@@ -139,7 +101,8 @@ class ExpenseListAdapter(private val transactionClickListener: OnTransactionClic
 
     override fun getItemCount(): Int {
 
-        val size = displayedTransactions.size
+//        val size = displayedTransactions.size
+        val size = super.getItemCount()
         return if (size <= 8) size
         else {
             if (MyApplication.fragmentName == "Home") 8
@@ -147,4 +110,21 @@ class ExpenseListAdapter(private val transactionClickListener: OnTransactionClic
         }
     }
 
+}
+
+// DiffUtil Callback
+class TransactionDiffCallback : DiffUtil.ItemCallback<TransactionItem>() {
+    override fun areItemsTheSame(oldItem: TransactionItem, newItem: TransactionItem): Boolean {
+        return when {
+            oldItem is TransactionItem.ExpenseItem && newItem is TransactionItem.ExpenseItem ->
+                oldItem.expense.id == newItem.expense.id
+            oldItem is TransactionItem.IncomeItem && newItem is TransactionItem.IncomeItem ->
+                oldItem.income.id == newItem.income.id
+            else -> false
+        }
+    }
+
+    override fun areContentsTheSame(oldItem: TransactionItem, newItem: TransactionItem): Boolean {
+        return oldItem == newItem
+    }
 }

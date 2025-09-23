@@ -12,5 +12,6 @@ class MyApplication : Application() {
     companion object {
         var fragmentName = ""
         var isExpense = true
+        var editExpense = true
     }
 }
